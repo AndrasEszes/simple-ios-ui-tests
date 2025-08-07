@@ -33,15 +33,6 @@
         "identifier" : "CE6C05932E44C77800FED518",
         "name" : "benchmarkUITests"
       }
-    },
-    {
-      "enabled" : false,
-      "parallelizable" : false,
-      "target" : {
-        "containerPath" : "container:benchmark.xcodeproj",
-        "identifier" : "CE6C05892E44C77800FED518",
-        "name" : "benchmarkTests"
-      }
     }
   ],
   "version" : 1
