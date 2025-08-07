@@ -1,0 +1,48 @@
+{
+  "configurations" : [
+    {
+      "id" : "6EDECEDD-F16A-45EC-AADD-7D1C295F512D",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "commandLineArgumentEntries" : [
+      {
+        "argument" : "",
+        "enabled" : false
+      }
+    ],
+    "maximumTestRepetitions" : 3,
+    "testTimeoutsEnabled" : true,
+    "uiTestingScreenshotsLifetime" : "keepAlways",
+    "userAttachmentLifetime" : "keepAlways"
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "skippedTests" : [
+        "benchmarkUITests",
+        "benchmarkUITests\/testExample()",
+        "benchmarkUITests\/testLaunchPerformance()"
+      ],
+      "target" : {
+        "containerPath" : "container:benchmark.xcodeproj",
+        "identifier" : "CE6C05932E44C77800FED518",
+        "name" : "benchmarkUITests"
+      }
+    },
+    {
+      "enabled" : false,
+      "parallelizable" : false,
+      "target" : {
+        "containerPath" : "container:benchmark.xcodeproj",
+        "identifier" : "CE6C05892E44C77800FED518",
+        "name" : "benchmarkTests"
+      }
+    }
+  ],
+  "version" : 1
+}
