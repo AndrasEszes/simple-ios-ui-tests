@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -11,8 +12,8 @@ import (
 
 // Copy the UI test file with a counter many times what the script gets as argument
 func main() {
-	if len(os.Args) != 3 {
-		fmt.Println("Usage: go run main.go <number_of_files> <number_of_test_functions>")
+	if len(os.Args) != 4 {
+		fmt.Println("Usage: go run main.go <number_of_files> <min_loop_iterations> <max_loop_iterations>")
 		os.Exit(1)
 	}
 
@@ -22,9 +23,15 @@ func main() {
 		os.Exit(1)
 	}
 
-	numFunctions, err := strconv.Atoi(os.Args[2])
+	minLoopIterations, err := strconv.Atoi(os.Args[2])
 	if err != nil {
-		fmt.Printf("Error: '%s' is not a valid number for number of test functions\n", os.Args[2])
+		fmt.Printf("Error: '%s' is not a valid number for minimum loop iterations\n", os.Args[2])
+		os.Exit(1)
+	}
+
+	maxLoopIterations, err := strconv.Atoi(os.Args[3])
+	if err != nil {
+		fmt.Printf("Error: '%s' is not a valid number for maximum loop iterations\n", os.Args[3])
 		os.Exit(1)
 	}
 
@@ -33,8 +40,18 @@ func main() {
 		os.Exit(1)
 	}
 
-	if numFunctions <= 0 {
-		fmt.Println("Error: Number of test functions must be greater than 0")
+	if minLoopIterations <= 0 {
+		fmt.Println("Error: Minimum loop iterations must be greater than 0")
+		os.Exit(1)
+	}
+
+	if maxLoopIterations <= 0 {
+		fmt.Println("Error: Maximum loop iterations must be greater than 0")
+		os.Exit(1)
+	}
+
+	if minLoopIterations > maxLoopIterations {
+		fmt.Println("Error: Minimum loop iterations cannot be greater than maximum loop iterations")
 		os.Exit(1)
 	}
 
@@ -51,6 +68,9 @@ func main() {
 	originalContent := string(content)
 
 	for i := 1; i <= numFiles; i++ {
+		// Generate random loop iterations for this file
+		loopIterations := minLoopIterations + rand.Intn(maxLoopIterations-minLoopIterations+1)
+
 		// Create new filename
 		newFileName := fmt.Sprintf("benchmarkUITestsLaunchTests%d.swift", i)
 		newFilePath := filepath.Join(targetDir, newFileName)
@@ -64,30 +84,11 @@ func main() {
 		// Replace filename in header comment
 		newContent = strings.Replace(newContent, "benchmarkUITestsLaunchTests.swift", newFileName, 1)
 
-		// Extract the test function to duplicate it
-		testFunctionPattern := `(?s)@MainActor\s+func testButtonAndAlert\(\) throws \{.*?\n    \}`
-		re := regexp.MustCompile(testFunctionPattern)
-		matches := re.FindAllString(newContent, -1)
-
-		if len(matches) == 0 {
-			fmt.Printf("Warning: Could not find testButtonAndAlert function in %s\n", newFileName)
-			continue
-		}
-
-		originalTestFunction := matches[0]
-
-		// Generate multiple test functions
-		var testFunctions strings.Builder
-		for j := 1; j <= numFunctions; j++ {
-			indexedTestFunction := strings.Replace(originalTestFunction, "testButtonAndAlert", fmt.Sprintf("testButtonAndAlert%d", j), 1)
-			testFunctions.WriteString(indexedTestFunction)
-			if j < numFunctions {
-				testFunctions.WriteString("\n\n    ")
-			}
-		}
-
-		// Replace the original test function with multiple indexed ones
-		newContent = strings.Replace(newContent, originalTestFunction, testFunctions.String(), 1)
+		// Replace the loop counter in the test function
+		loopPattern := `for _ in 1\.\.\.1 \{`
+		newLoopStatement := fmt.Sprintf("for _ in 1...%d {", loopIterations)
+		re := regexp.MustCompile(loopPattern)
+		newContent = re.ReplaceAllString(newContent, newLoopStatement)
 
 		// Write the new file
 		err := os.WriteFile(newFilePath, []byte(newContent), 0644)
@@ -96,8 +97,8 @@ func main() {
 			continue
 		}
 
-		fmt.Printf("Created: %s with class %s and %d test functions\n", newFilePath, newClassName, numFunctions)
+		fmt.Printf("Created: %s with class %s and loop iterations set to %d\n", newFilePath, newClassName, loopIterations)
 	}
 
-	fmt.Printf("Successfully created %d test file copies, each with %d test functions\n", numFiles, numFunctions)
+	fmt.Printf("Successfully created %d test file copies with random loop iterations between %d and %d\n", numFiles, minLoopIterations, maxLoopIterations)
 }

@@ -21,26 +21,19 @@ final class benchmarkUITestsLaunchTests: XCTestCase {
     func testButtonAndAlert() throws {
         let app = XCUIApplication()
         app.launch()
-        let button = app.buttons["Show Alert"]
-        XCTAssertTrue(button.waitForExistence(timeout: 2), "Show Alert button should exist")
         
-        let attachment1 = XCTAttachment(screenshot: app.screenshot())
-        attachment1.name = "Show Alert Button"
-        attachment1.lifetime = .keepAlways
-        add(attachment1)
-        
-        button.tap()
-        let alert = app.alerts["Alert"]
-        XCTAssertTrue(alert.waitForExistence(timeout: 2), "Alert should be presented")
-        let okButton = alert.buttons["OK"]
-        XCTAssertTrue(okButton.waitForExistence(timeout: 2), "OK button should exist on alert")
-        
-        let attachment2 = XCTAttachment(screenshot: app.screenshot())
-        attachment2.name = "Alert"
-        attachment2.lifetime = .keepAlways
-        add(attachment2)
-        
-        okButton.tap()
-        XCTAssertFalse(alert.exists, "Alert should be dismissed after tapping OK")
+        for _ in 1...1 {
+            let button = app.buttons["Show Alert"]
+            XCTAssertTrue(button.waitForExistence(timeout: 2), "Show Alert button should exist")
+            
+            button.tap()
+            let alert = app.alerts["Alert"]
+            XCTAssertTrue(alert.waitForExistence(timeout: 2), "Alert should be presented")
+            let okButton = alert.buttons["OK"]
+            XCTAssertTrue(okButton.waitForExistence(timeout: 2), "OK button should exist on alert")
+            
+            okButton.tap()
+            XCTAssertFalse(alert.exists, "Alert should be dismissed after tapping OK")
+        }
     }
 }
