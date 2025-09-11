@@ -2,10 +2,33 @@
   "configurations" : [
     {
       "id" : "6EDECEDD-F16A-45EC-AADD-7D1C295F512D",
-      "name" : "Configuration 1",
+      "name" : "iPhone 16",
       "options" : {
-
-      }
+        "parallelTestingEnabled" : true,
+        "maximumParallelTestDestinations" : 2
+      },
+      "destinations": [
+        {
+          "platform": "iOS Simulator",
+          "name": "iPhone 16",
+          "osVersion": "18.5"
+        }
+      ]
+    },
+    {
+      "id" : "9C28DC06-EAB7-4BDE-9400-4470B696277A",
+      "name" : "iPad (A16)",
+      "options" : {
+        "parallelTestingEnabled" : true,
+        "maximumParallelTestDestinations" : 2
+      },
+      "destinations": [
+        {
+          "platform": "iOS Simulator",
+          "name": "iPad (A16)",
+          "osVersion": "18.5"
+        }
+      ]
     }
   ],
   "defaultOptions" : {
@@ -16,6 +39,7 @@
       }
     ],
     "maximumTestRepetitions" : 3,
+    "testRepetitionMode" : "retryOnFailure",
     "testTimeoutsEnabled" : true,
     "uiTestingScreenshotsLifetime" : "keepAlways",
     "userAttachmentLifetime" : "keepAlways"
@@ -25,8 +49,8 @@
       "parallelizable" : true,
       "skippedTests" : [
         "benchmarkUITests",
-        "benchmarkUITests\/testExample()",
-        "benchmarkUITests\/testLaunchPerformance()"
+        "benchmarkUITests/testExample()",
+        "benchmarkUITests/testLaunchPerformance()"
       ],
       "target" : {
         "containerPath" : "container:benchmark.xcodeproj",
