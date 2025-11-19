@@ -42,7 +42,8 @@
     "testRepetitionMode" : "retryOnFailure",
     "testTimeoutsEnabled" : true,
     "uiTestingScreenshotsLifetime" : "keepAlways",
-    "userAttachmentLifetime" : "keepAlways"
+    "userAttachmentLifetime" : "keepAlways",
+    "videoRecordingMode" : "recordAll"
   },
   "testTargets" : [
     {
